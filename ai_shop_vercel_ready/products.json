@@ -1,0 +1,184 @@
+[
+  {
+    "id": "product-1",
+    "name": "AI Product 1",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2095,
+    "currency": "eur",
+    "badges": [
+      "Nieuw"
+    ],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-1/1024/768"
+  },
+  {
+    "id": "product-2",
+    "name": "AI Product 2",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2195,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-2/1024/768"
+  },
+  {
+    "id": "product-3",
+    "name": "AI Product 3",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2295,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-3/1024/768"
+  },
+  {
+    "id": "product-4",
+    "name": "AI Product 4",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2395,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-4/1024/768"
+  },
+  {
+    "id": "product-5",
+    "name": "AI Product 5",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2495,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-5/1024/768"
+  },
+  {
+    "id": "product-6",
+    "name": "AI Product 6",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2595,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-6/1024/768"
+  },
+  {
+    "id": "product-7",
+    "name": "AI Product 7",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2695,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-7/1024/768"
+  },
+  {
+    "id": "product-8",
+    "name": "AI Product 8",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2795,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-8/1024/768"
+  },
+  {
+    "id": "product-9",
+    "name": "AI Product 9",
+    "short_description": "Handig, compact en modern.",
+    "long_description": "Dit is een voorbeeldproduct voor je AI-webshop. Pas de tekst later naar wens aan.",
+    "price_cents": 2895,
+    "currency": "eur",
+    "badges": [],
+    "keywords": [
+      "ai",
+      "shop",
+      "demo"
+    ],
+    "usp": [
+      "Lichtgewicht",
+      "Snelle levering (demo)",
+      "Mooi design"
+    ],
+    "image": "https://picsum.photos/seed/product-9/1024/768"
+  }
+]
