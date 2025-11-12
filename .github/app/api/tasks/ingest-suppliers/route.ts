@@ -1,4 +1,4 @@
-// app/api/tasks/ingest-suppliers/route.ts
+app/api/tasks/ingest-suppliers/route.ts
 export const dynamic = "force-dynamic";
 
 export async function GET() {
