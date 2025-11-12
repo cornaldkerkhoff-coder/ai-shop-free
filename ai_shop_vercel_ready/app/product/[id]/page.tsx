@@ -1,41 +1,34 @@
-import Image from "next/image";
-import { getProductById } from "@/lib/products";
-import { formatMoney } from "@/lib/format";
+type P = { id:string; title:string; description:string; image:string|null; price:number; stock:number };
 
-export default function ProductPage({ params }: { params: { id: string }}){
-  const p = getProductById(params.id);
-  if (!p) return <div className="p-8">Product niet gevonden.</div>;
+async function getProduct(id: string): Promise<P | null> {
+  const base =
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
+  const url = `${base}/api/auto-products`;
+  try {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) return null;
+    const all = (await r.json()).items as P[];
+    return all.find(p => String(p.id) === id) ?? null;
+  } catch { return null; }
+}
 
-  async function buy(){
-    "use server";
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/checkout`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: p.id })
-    });
-    const data = await res.json();
-    if (data.ok) return { redirect: `/thank-you?order=${data.orderId}` };
-    throw new Error("Bestellen mislukt");
-  }
-
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
+  if (!product) return <main className="p-6">Product niet gevonden.</main>;
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-white border">
-        <Image src={p.image} alt={p.name} fill className="object-cover"/>
-      </div>
+    <main className="mx-auto max-w-4xl p-6 grid md:grid-cols-2 gap-6">
+      {product.image && (
+        <img src={product.image} alt={product.title} className="w-full rounded-2xl object-cover" />
+      )}
       <div>
-        <h1 className="text-2xl font-bold">{p.name}</h1>
-        <div className="mt-2 text-lg font-semibold">{formatMoney(p.price_cents,"EUR")}</div>
-        <p className="mt-4 text-gray-700">{p.long_description}</p>
-        <ul className="mt-4 list-disc list-inside text-sm text-gray-700 space-y-1">
-          {p.usp?.map((u,i)=>(<li key={i}>{u}</li>))}
-        </ul>
-        <form action={buy} className="mt-6">
-          <button type="submit" className="rounded-xl bg-black text-white px-5 py-3 hover:bg-gray-800">
-            Test-bestelling plaatsen
-          </button>
-        </form>
-        <p className="mt-3 text-xs text-gray-500">Demo: geen echte betaling; order-ID wordt getoond.</p>
+        <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+        <p className="text-slate-600 mb-4">{product.description}</p>
+        <div className="text-xl font-bold mb-4">€ {product.price.toFixed(2)}</div>
+        <button className="rounded-xl border px-4 py-2 shadow-sm">
+          In winkelmand (demo)
+        </button>
       </div>
-    </div>
+    </main>
   );
 }
