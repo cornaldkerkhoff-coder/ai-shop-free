@@ -8,9 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ai_shop_vercel_ready   # jouw submap
 
     steps:
       - uses: actions/checkout@v4
@@ -19,21 +16,31 @@ jobs:
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      # 1) Linkt de map aan jouw Vercel-project (maakt .vercel/project.json)
-      - name: Vercel link (create .vercel/project.json)
+      # 1) Link project in de submap (maakt ai_shop_vercel_ready/.vercel/project.json)
+      - name: Vercel link
         run: |
           vercel link --yes \
             --project "${{ secrets.VERCEL_PROJECT }}" \
-            --scope "${{ secrets.VERCEL_SCOPE }}" \
-            --token "${{ secrets.VERCEL_TOKEN }}"
+            --scope   "${{ secrets.VERCEL_SCOPE }}" \
+            --token   "${{ secrets.VERCEL_TOKEN }}" \
+            --cwd ai_shop_vercel_ready
 
-      # 2) Haalt env/project data binnen (nu ZONDER --project/--scope)
+      # 2) Pull settings/env in de submap
       - name: Vercel pull
-        run: vercel pull --yes --environment=production --token "${{ secrets.VERCEL_TOKEN }}"
+        run: |
+          vercel pull --yes --environment=production \
+            --token "${{ secrets.VERCEL_TOKEN }}" \
+            --cwd ai_shop_vercel_ready
 
-      # 3) Build & 4) Deploy gebruiken de gelinkte .vercel/project.json
+      # 3) Prevent dubbele submap: zet rootDirectory leeg in project.json
+      - name: Normalize .vercel/project.json
+        run: |
+          node -e "const fs=require('fs');const p='ai_shop_vercel_ready/.vercel/project.json';let j=JSON.parse(fs.readFileSync(p,'utf8'));if(j.settings&&j.settings.rootDirectory){j.settings.rootDirectory='';fs.writeFileSync(p,JSON.stringify(j,null,2));console.log('rootDirectory cleared');}else{console.log('no rootDirectory set');}"
+
+      # 4) Build in de submap
       - name: Build
-        run: vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}"
+        run: vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
 
+      # 5) Deploy prebuilt in de submap
       - name: Deploy (prebuilt)
-        run: vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}"
+        run: vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
