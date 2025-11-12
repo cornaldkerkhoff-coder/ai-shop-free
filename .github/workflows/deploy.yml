@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai_shop_vercel_ready   # <— één keer hier instellen
 
     steps:
       - uses: actions/checkout@v4
@@ -18,33 +21,29 @@ jobs:
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      # 1️⃣ Link project met Vercel
+      # 1) Link project (maakt .vercel/project.json in deze map)
       - name: Vercel link
         run: |
           vercel link --yes \
             --project "${{ secrets.VERCEL_PROJECT }}" \
-            --scope "${{ secrets.VERCEL_SCOPE }}" \
-            --token "${{ secrets.VERCEL_TOKEN }}" \
-            --cwd ai_shop_vercel_ready
+            --scope   "${{ secrets.VERCEL_SCOPE }}" \
+            --token   "${{ secrets.VERCEL_TOKEN }}"
 
-      # 2️⃣ Download Vercel instellingen (env vars)
+      # 2) Pull settings/env (geen --cwd nodig)
       - name: Vercel pull
         run: |
           vercel pull --yes --environment=production \
-            --token "${{ secrets.VERCEL_TOKEN }}" \
-            --cwd ai_shop_vercel_ready
+            --token "${{ secrets.VERCEL_TOKEN }}"
 
-      # 3️⃣ Normalize project.json (rootDirectory leegmaken)
+      # 3) rootDirectory in project.json leegmaken/verwijderen (voorkomt dubbele pad)
       - name: Normalize .vercel/project.json
         run: |
-          node -e "const fs=require('fs');const p='ai_shop_vercel_ready/.vercel/project.json';if(fs.existsSync(p)){const j=JSON.parse(fs.readFileSync(p,'utf8'));if(j.settings&&j.settings.rootDirectory){delete j.settings.rootDirectory;fs.writeFileSync(p,JSON.stringify(j,null,2));console.log('rootDirectory cleared');}else{console.log('no rootDirectory set');}}"
+          node -e "const fs=require('fs');const p='.vercel/project.json';if(fs.existsSync(p)){const j=JSON.parse(fs.readFileSync(p,'utf8'));if(j.settings&&j.settings.rootDirectory){delete j.settings.rootDirectory;fs.writeFileSync(p,JSON.stringify(j,null,2));console.log('rootDirectory cleared');}else{console.log('no rootDirectory set');}}"
 
-      # 4️⃣ Build project
+      # 4) Build
       - name: Build
-        run: |
-          vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
+        run: vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}"
 
-      # 5️⃣ Deploy build naar productie
+      # 5) Deploy
       - name: Deploy (prebuilt)
-        run: |
-          vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
+        run: vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}"
