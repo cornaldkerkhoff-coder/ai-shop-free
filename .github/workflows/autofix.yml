@@ -1,0 +1,42 @@
+name: Self-Heal (rule-based)
+
+on:
+  workflow_run:
+    workflows: ["Deploy to Vercel (auto + manual)"]
+    types: [completed]
+
+permissions:
+  contents: write   # <-- nodig om te kunnen committen
+
+jobs:
+  heal:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fix common Next.js issues automatically
+        run: |
+          set -e
+          FILE="ai_shop_vercel_ready/next.config.js"
+          if [ -f "$FILE" ]; then
+            # Als er rommel bovenin staat (zoals 'thisWillCrash'), overschrijf met veilige config
+            echo '/** @type {import("next").NextConfig} */
+const nextConfig = {
+  images: { remotePatterns: [{ protocol: "https", hostname: "picsum.photos" }] },
+};
+module.exports = nextConfig;' > "$FILE"
+            echo "next.config.js reset to safe template."
+          fi
+
+          # next.config.ts -> js (val terug)
+          if [ -f "ai_shop_vercel_ready/next.config.ts" ]; then
+            mv ai_shop_vercel_ready/next.config.ts ai_shop_vercel_ready/next.config.ts.bak || true
+            echo "Renamed/disabled next.config.ts to avoid TypeScript config issue."
+          fi
+
+      - name: Commit fixes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "chore(self-heal): reset next.config.js (auto-fix)"
+          add: "ai_shop_vercel_ready/next.config.js"
