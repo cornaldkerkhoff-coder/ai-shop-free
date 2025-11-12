@@ -2,35 +2,38 @@ name: Deploy to Vercel (auto + manual)
 
 on:
   push:
-    branches: [ main ]      # autodeploy
-  workflow_dispatch: {}     # handmatig starten
+    branches: [ main ]
+  workflow_dispatch: {}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ai_shop_vercel_ready    # <<< jouw projectmap
+        working-directory: ai_shop_vercel_ready   # jouw submap
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        with: { node-version: 20 }
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      # Link project + haal env binnen (HIER gebruik je project/scope)
-      - name: Vercel pull (link project)
+      # 1) Linkt de map aan jouw Vercel-project (maakt .vercel/project.json)
+      - name: Vercel link (create .vercel/project.json)
         run: |
-          vercel pull --yes --environment=production \
-            --token="${{ secrets.VERCEL_TOKEN }}" \
-            --project="${{ secrets.VERCEL_PROJECT }}" \
-            --scope="${{ secrets.VERCEL_SCOPE }}"
+          vercel link --yes \
+            --project "${{ secrets.VERCEL_PROJECT }}" \
+            --scope "${{ secrets.VERCEL_SCOPE }}" \
+            --token "${{ secrets.VERCEL_TOKEN }}"
 
-      # Bouw ZONDER --project (nu is .vercel/project.json aanwezig)
+      # 2) Haalt env/project data binnen (nu ZONDER --project/--scope)
+      - name: Vercel pull
+        run: vercel pull --yes --environment=production --token "${{ secrets.VERCEL_TOKEN }}"
+
+      # 3) Build & 4) Deploy gebruiken de gelinkte .vercel/project.json
       - name: Build
-        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        run: vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}"
 
-      # Deploy ZONDER --project (gebruikt .vercel/project.json)
       - name: Deploy (prebuilt)
-        run: vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        run: vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}"
