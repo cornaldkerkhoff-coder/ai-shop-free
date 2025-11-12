@@ -2,38 +2,35 @@ name: Deploy to Vercel (auto + manual)
 
 on:
   push:
-    branches: [ main ]      # AUTODEPLOY bij elke push naar main
-  workflow_dispatch: {}     # Handmatig via Actions > Run workflow
+    branches: [ main ]      # autodeploy
+  workflow_dispatch: {}     # handmatig starten
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai_shop_vercel_ready    # <<< jouw projectmap
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      # Alleen kijken of de map goed staat
-      - name: Show repo structure
+      # Link project + haal env binnen (HIER gebruik je project/scope)
+      - name: Vercel pull (link project)
         run: |
-          pwd
-          ls -la
-          echo "--- ai_shop_vercel_ready ---"
-          ls -la ai_shop_vercel_ready
+          vercel pull --yes --environment=production \
+            --token="${{ secrets.VERCEL_TOKEN }}" \
+            --project="${{ secrets.VERCEL_PROJECT }}" \
+            --scope="${{ secrets.VERCEL_SCOPE }}"
 
-      # BELANGRIJK:
-      # - Je app staat in submap: ai_shop_vercel_ready
-      # - Vercel projectnaam: ai-shop-free123   (zoals op je Vercel projectpagina)
-      # - Team-slug: cornalds-projects          (staat in je Vercel URL)
+      # Bouw ZONDER --project (nu is .vercel/project.json aanwezig)
       - name: Build
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --cwd ai_shop_vercel_ready --project ai-shop-free123 --scope cornalds-projects
+        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
+      # Deploy ZONDER --project (gebruikt .vercel/project.json)
       - name: Deploy (prebuilt)
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --cwd ai_shop_vercel_ready --project ai-shop-free123 --scope cornalds-projects
+        run: vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
