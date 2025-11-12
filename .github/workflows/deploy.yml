@@ -39,7 +39,7 @@ jobs:
 
       # 4) Build in de submap
       - name: Build
-        run: vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
+run: vercel deploy --prebuilt --prod --token "${{ secrets.VERCEL_TOKEN }}" --cwd ai_shop_vercel_ready
 
       # 5) Deploy prebuilt in de submap
       - name: Deploy (prebuilt)
